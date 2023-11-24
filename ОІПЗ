@@ -1,0 +1,165 @@
+#include <iostream>
+#include<fstream>
+#include<cmath>
+#include<string>
+
+using namespace std;
+
+void checkFile(const ofstream& file)
+{
+    if (!file.is_open())
+    {
+        throw "File not open";
+    }
+
+}
+
+void checkInput()
+{
+    if (cin.fail())
+    {
+        throw "Incorrect input";
+    }
+}
+
+void checkParams(int n, int a, int b, int h)
+{
+    if (b < a || n <= 1)
+    {
+        throw "Incorrect data";
+    }
+}
+
+int calculate(int n, int x)
+{
+double result = 0;
+
+    if (x <= 0)
+    {
+    double sum = 0;
+
+    for (int i = 1; i <= n; i++)
+    {
+        double p = 0;
+
+        for (int j = 1; j <= n; j++)
+        {
+            double denominator = x - i + j;
+
+            if (denominator != 0)
+            {
+                p += 1 / denominator;
+            }
+            else
+            {
+                return 0; 
+            }
+        }
+
+        sum += p;
+    }
+
+    result = sum;
+}
+else
+{
+    double y_value = 1;
+
+    for (int i = 1; i <= n; i++)
+    {
+        if (x != 0)
+        {
+            double term = (1 / x) - (1 / i);
+
+            if (term != 0)
+            {
+                y_value *= term;
+            }
+            else
+            {
+                return 0; 
+            }
+        }
+        else
+        {
+            return 0; 
+        }
+    }
+
+    result = y_value;
+}
+
+return result;
+}
+
+
+int main()
+{
+    char choice;
+    int a, b, h, n;
+    int y;
+    try
+    {
+       cout << "If you want to write the results to a file, press Y, otherwise press N:";
+       cin >> choice;
+        checkInput();
+
+       cout << "Write a: ";
+       cin >> a;
+        checkInput();
+
+       cout << "Write b: ";
+       cin >> b;
+        checkInput();
+
+       cout << "Write h: ";
+       cin >> h;
+        checkInput();
+
+       cout << "Write n: ";
+       cin >> n;
+        checkInput();
+
+        checkParams(n, a, b, h);
+
+        ofstream fout;
+        if (choice == 'Y')
+        {
+            fout.open("test.txt");
+            checkFile(fout);
+        }
+
+        for (double x = a; x <= b; x = x + h)
+        {
+            y = calculate(n, x);
+
+            cout << "X: " << x << endl;
+            cout << "Y: " << y << endl;
+            cout << "N: " << n << endl;
+
+            if (fout.is_open())
+            {
+                fout << "X: " << x << endl;
+                fout << "Y: " << y << endl;
+                fout << "N: " << n << endl;
+            }
+
+        }
+
+        if (fout.is_open())
+        {
+            fout.close();
+        }
+
+    }
+    catch (const char* ex)
+    {
+       cout << ex << std::endl;
+        return -1;
+
+    }
+    catch (...)
+    {
+       cout << "Unknow error";
+    }
+}
